@@ -69,6 +69,14 @@ public class Gant extends Task {
    */
   private boolean inheritAll = false;
   /**
+   *  Flag determining whether to cache the generated classes.
+   */
+  private boolean useCache = false;
+  /**
+   *  The directory where to cache generated classes to.
+   */
+  private File cacheDir = null;
+  /**
    *  A class representing a nested definition tag.
    */
   public static final class Definition {
@@ -139,6 +147,19 @@ public class Gant extends Task {
    */
   public void setInheritAll(final boolean value) { inheritAll = value; }
   /**
+   *  If true, cache the generated classes and perform modified checks on the
+   *  file before re-compilation.
+   *
+   *  @param value if true cache the generated classes.
+   */
+  public void setUseCache(final boolean value) { useCache = value; }
+  /**
+   *  The directory where to cache generated classes to.
+   *
+   *  @param value the cache directory.
+   */
+  public void setCacheDir(final File value) { cacheDir = value; }
+  /**
    * Load the file and then execute it.
    */
   @Override public void execute() throws BuildException {
@@ -186,6 +207,12 @@ public class Gant extends Task {
       ant.invokeMethod("property", new Object[] { definitionParameter });
     }
     final gant.Gant gant = new gant.Gant(binding);
+    gant.setUseCache(useCache);
+    if (useCache){
+      if (cacheDir != null) { gant.setCacheDirectory(cacheDir); }
+      // add the user defined or default cache diretory to ant's classloader.
+      ((AntClassLoader)getClass().getClassLoader()).addPathComponent(gant.getCacheDirectory());
+    }
     gant.loadScript(gantFile);
     final List<String> targetsAsStrings = new ArrayList<String>();
     for (final GantTarget g : targets) { targetsAsStrings.add(g.getValue()); }

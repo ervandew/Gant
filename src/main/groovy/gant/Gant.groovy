@@ -211,6 +211,26 @@ final class Gant {
     binding.removeBuildListener(buildListener)
   }
   /**
+   *  Set whether scripts are cached or not
+   */
+  public void setUseCache(final boolean useCache) {
+    this.useCache = useCache
+  }
+  /**
+   *  Set the location where the compiled scripts are cached.
+   */
+  public void setCacheDirectory(final File cacheDirectory) {
+    this.cacheDirectory = cacheDirectory
+  }
+  /**
+   *  Get the location where the compiled scripts are cached.
+   *
+   *  @return The <code>File</code> instance.
+   */
+  public File getCacheDirectory() {
+    return cacheDirectory
+  }
+  /**
    *  Treat the given text as a Gant script and load it.
    *
    *  @params text The text of the Gant script to load.
